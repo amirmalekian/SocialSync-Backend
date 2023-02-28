@@ -1,10 +1,13 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import express, { Application } from "express";
+import configure from "./config";
+import router from "./routes";
+import config from "config";
 
 const app: Application = express();
-const port = 8000;
+const PORT = config.get("PORT") || 3000;
 
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  res.send("Hello World!");
-});
+configure(app, express);
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.use("/api", router);
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
