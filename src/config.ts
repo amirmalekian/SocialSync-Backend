@@ -9,7 +9,7 @@ export default (app: Application, express: any) => {
   });
   app.use(
     cors({
-      origin: "http://localhost:5174",
+      origin: "http://localhost:5173",
     })
   );
   app.use(cookieParser());
