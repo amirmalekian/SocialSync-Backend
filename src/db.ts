@@ -1,9 +1,12 @@
 import mysql from "mysql";
-import config from "config";
+import * as dotenv from "dotenv";
 
-export const db = mysql.createConnection({
-  host: config.get("DB.HOST"),
-  user: config.get("DB.USER"),
-  password: config.get("DB.PWD"),
-  database: config.get("DB.NAME"),
+dotenv.config();
+
+export const db = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: parseInt(process.env.DB_PORT || "3000"),
 });

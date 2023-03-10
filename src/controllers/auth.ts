@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { db } from "../db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import config from "config";
 
 export const register = (req: Request, res: Response) => {
   // CHECK USER IF EXIST
@@ -45,7 +44,10 @@ export const logIn = (req: Request, res: Response) => {
     if (!checkPassword)
       return res.status(400).json("Wrong password or username!");
 
-    const token = jwt.sign({ id: data[0].id }, config.get("jwt_key"));
+    const token = jwt.sign(
+      { id: data[0].id },
+      process.env.JWT_KEY || "defaultSecret"
+    );
 
     const { password, ...others } = data[0];
     res

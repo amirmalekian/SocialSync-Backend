@@ -1,15 +1,17 @@
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import { db } from "../db";
-import config from "config";
 import moment from "moment";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 export const getPosts = (req: Request, res: Response) => {
   const userId = req.query.userId;
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in");
 
-  jwt.verify(token, config.get("jwt_key"), (err: any, userInfo: any) => {
+  jwt.verify(token, process.env.JWT_KEY || "defaultSecret", (err: any, userInfo: any) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const query =
@@ -34,7 +36,7 @@ export const addPost = (req: Request, res: Response) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in");
 
-  jwt.verify(token, config.get("jwt_key"), (err: any, userInfo: any) => {
+  jwt.verify(token, process.env.JWT_KEY || "defaultSecret", (err: any, userInfo: any) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const query =
@@ -57,7 +59,7 @@ export const deletePost = (req: Request, res: Response) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in");
 
-  jwt.verify(token, config.get("jwt_key"), (err: any, userInfo: any) => {
+  jwt.verify(token, process.env.JWT_KEY || "defaultSecret", (err: any, userInfo: any) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const query = "DELETE FROM posts WHERE `id` = ? AND `userId` = ?";

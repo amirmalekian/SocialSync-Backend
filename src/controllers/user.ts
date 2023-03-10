@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { db } from "../db";
 import jwt from "jsonwebtoken";
-import config from "config";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 export const getUser = (req: Request, res: Response) => {
   const userId = req.params?.userId;
@@ -17,7 +19,7 @@ export const updateUser = (req: Request, res: Response) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated!");
 
-  jwt.verify(token, config.get("jwt_key"), (err: any, userInfo: any) => {
+  jwt.verify(token, process.env.JWT_KEY || "defaultSecret", (err: any, userInfo: any) => {
     if (err) return res.status(403).json("Token is not valid!");
     const query =
       "UPDATE users SET `name` = ?, `city` = ?, `website` = ?, `profileImg` = ?, `coverImg` = ? WHERE id = ?";

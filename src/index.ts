@@ -1,11 +1,12 @@
 import express, { Application } from "express";
 import configure from "./config";
 import router from "./routes";
-import config from "config";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const app: Application = express();
-const PORT = config.get("PORT") || 3000;
-
+const PORT = process.env.PORT || 3000;
 configure(app, express);
 
 app.use("/api", router);

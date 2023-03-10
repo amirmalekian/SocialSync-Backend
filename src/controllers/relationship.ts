@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { db } from "../db";
 import jwt from "jsonwebtoken";
-import config from "config";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 export const getRelationships = (req: Request, res: Response) => {
   const query = `SELECT followerUserId FROM relationships WHERE followedUserId = ?`;
@@ -23,7 +25,7 @@ export const addRelationships = (req: Request, res: Response) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in");
 
-  jwt.verify(token, config.get("jwt_key"), (err: any, userInfo: any) => {
+  jwt.verify(token, process.env.JWT_KEY || "defaultSecret", (err: any, userInfo: any) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const query =
@@ -41,7 +43,7 @@ export const deleteRelationships = (req: Request, res: Response) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in");
 
-  jwt.verify(token, config.get("jwt_key"), (err: any, userInfo: any) => {
+  jwt.verify(token, process.env.JWT_KEY || "defaultSecret", (err: any, userInfo: any) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const query =
